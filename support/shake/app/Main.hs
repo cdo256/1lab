@@ -36,12 +36,10 @@ import Shake.Modules
 import Shake.Diagram
 import Shake.Digest
 import Shake.KaTeX
-import Shake.Git
 import Shake.Utils
 
 import Definitions
 import Timer
-import Shake.Recent (recentAdditions)
 
 {-
   Welcome to the Horror That Is 1Lab's Build Script.
@@ -52,7 +50,6 @@ rules :: Rules ()
 rules = do
   agdaRules
   digestRules
-  gitRules
   katexRules
   moduleRules
   linksRules
@@ -200,8 +197,6 @@ rules = do
   phony "typecheck-ts" do
     getDirectoryFiles "support/web/js" ["**/*.ts", "**/*.tsx"] >>= \files -> need ["support/web/js" </> f | f <- files]
     nodeCommand [] "tsc" ["--noEmit", "-p", "tsconfig.json"]
-
-  phony "recent" do liftIO . print =<< recentAdditions
 
   -- Profit!
 

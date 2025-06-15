@@ -17,7 +17,6 @@ import Development.Shake
 import HTML.Backend
 
 import Shake.Modules (getOurModules)
-import Shake.Git (gitCommand)
 
 import qualified Text.Blaze.Html5.Attributes as A
 import qualified Text.Blaze.Html5 as H
@@ -40,17 +39,10 @@ data Commit = Commit
 
 recentAdditions :: Action [Commit]
 recentAdditions = do
-  Stdout log <- gitCommand
-    [ "log", "--diff-filter=A"
-    , "--pretty=format:%H%x00%aN%x00%s%x00%ad"
-    , "--date=format:%B %d, %Y"
-    , "--", "src/"
-    ]
-
   allMods <- getOurModules
 
   let
-    changes = take 20 $ lines log
+    changes = []
 
     parse :: String -> Action (Maybe Commit)
     parse s = do
@@ -63,10 +55,8 @@ recentAdditions = do
             fp = dropExtensions $ dropDirectory1 srcfp
           in moduleName fp
 
-      Stdout out <- gitCommand ["show", "--diff-filter=A", "--name-status", "--pretty=oneline", Text.unpack hash ]
-
       let
-        mods  = map Text.pack $ filter (`Map.member` allMods) $ map file $ drop 1 $ lines out
+        mods  = []
         valid = not (null mods)
 
       pure $! if valid

@@ -38,7 +38,6 @@ common common
     HTML.Base,
     HTML.Emit,
     Shake.AgdaCompile,
-    Shake.Git,
     Shake.KaTeX,
     Shake.LinkGraph,
     Shake.LinkReferences,
@@ -78,7 +77,6 @@ executable shake
     , Shake.AgdaCompile
     , Shake.Diagram
     , Shake.Digest
-    , Shake.Git
     , Shake.KaTeX
     , Shake.LinkGraph
     , Shake.LinkReferences
