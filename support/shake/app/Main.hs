@@ -41,6 +41,8 @@ import Shake.Utils
 import Definitions
 import Timer
 
+import GHC.IO.Encoding (setLocaleEncoding, utf8)
+
 {-
   Welcome to the Horror That Is 1Lab's Build Script.
 
@@ -202,6 +204,7 @@ rules = do
 
 main :: IO ()
 main = do
+  setLocaleEncoding utf8
   args <- getArgs
   when ("--help" `elem` args || "-h" `elem` args) do
     putStrLn $ usageInfo "shake" optDescrs
