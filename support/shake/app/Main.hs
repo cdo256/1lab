@@ -163,6 +163,14 @@ rules = do
     liftIO . print =<< getPreambleFor True
     liftIO . print =<< getParsedPreamble
 
+  phony "minimal" do
+    skipAgda <- getSkipAgda
+    agda <- getAllModules >>= \modules -> pure do
+      (f, _) <- Map.toList modules
+      [ "_build/html" </> f <.> "html" ] <>
+        [ "_build/html/types" </> f <.> "json" | not skipAgda ]
+    need agda
+
   {-
     The final build step. This basically just finds all the files we actually
     need and kicks off the above job to build them.
