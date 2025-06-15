@@ -61,12 +61,7 @@ in
   pkgs.stdenv.mkDerivation rec {
     name = "1lab";
 
-    src = if inNixShell then null else
-      with pkgs.nix-gitignore; gitignoreFilterSourcePure (_: _: true) [
-        # Keep .git around for extracting page authors
-        (compileRecursiveGitignore ./.)
-        ".github"
-      ] ./.;
+  src = ./.;
 
     nativeBuildInputs = deps;
 
