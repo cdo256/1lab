@@ -10,6 +10,7 @@
     #  #sha256 = "sha256:17m78fn3y2x44zgdm428k3l6xamyw6vnz2vd68nj5kxlkbfqnynr";
     #};
     flake-parts.url = "github:hercules-ci/flake-parts";
+    just-agda.url = "github:cdo256/just-agda";
   };
 
   outputs =
@@ -19,13 +20,17 @@
         "x86_64-linux"
       ];
       perSystem =
-        { system, ... }:
+        { system, just-agda, ... }:
+        let
+          just-agda = inputs.just-agda.packages.${system}.default;
+        in
         {
           packages = {
             default = import ./default.nix {
               inherit system;
               inNixShell = true;
               interactive = true;
+              extraPackages = [ just-agda ];
             };
           };
           devShells = {
@@ -33,6 +38,7 @@
               inherit system;
               inNixShell = true;
               interactive = true;
+              extraPackages = [ just-agda ];
             };
           };
         };

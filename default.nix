@@ -3,6 +3,7 @@
   # Do we want the full Agda package for interactive use? Set to false in CI
 , interactive ? true
 , system ? builtins.currentSystem
+, extraPackages ? [ ]
 }:
 let
   pkgs = import ./support/nix/nixpkgs.nix { inherit system; };
