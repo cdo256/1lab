@@ -3,6 +3,7 @@ include:
   src
   wip
   _build
+  _build/2.8.0/agda/src
   .
 flags:
   --cubical
