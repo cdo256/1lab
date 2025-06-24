@@ -20,7 +20,6 @@ import GHC.Generics (Generic)
 
 import HTML.Backend (moduleName)
 
-import Shake.Git
 import Shake.Options
 
 type ModName = String
@@ -57,13 +56,10 @@ type instance RuleResult ModulesQ = ModulesA
 moduleRules :: Rules ()
 moduleRules = do
   _ <- addOracle \ModulesQ -> do
-    gitOnly <- getGitOnly
 
     let
       isAgda x = any (?== x) ["src//*.agda", "src//*.lagda.md"]
-      getFiles = if gitOnly
-        then map dropDirectory1 . filter isAgda <$> gitFiles
-        else getDirectoryFiles "src" ["**/*.agda", "**/*.lagda.md"]
+      getFiles = getDirectoryFiles "src" ["**/*.agda", "**/*.lagda.md"]
 
       toOut x | takeExtensions x == ".lagda.md"
               = (moduleName (dropExtensions x), WithText)

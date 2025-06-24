@@ -36,12 +36,12 @@ import Shake.Modules
 import Shake.Diagram
 import Shake.Digest
 import Shake.KaTeX
-import Shake.Git
 import Shake.Utils
 
 import Definitions
 import Timer
-import Shake.Recent (recentAdditions)
+
+import GHC.IO.Encoding (setLocaleEncoding, utf8)
 
 {-
   Welcome to the Horror That Is 1Lab's Build Script.
@@ -52,7 +52,6 @@ rules :: Rules ()
 rules = do
   agdaRules
   digestRules
-  gitRules
   katexRules
   moduleRules
   linksRules
@@ -164,6 +163,14 @@ rules = do
     liftIO . print =<< getPreambleFor True
     liftIO . print =<< getParsedPreamble
 
+  phony "minimal" do
+    skipAgda <- getSkipAgda
+    agda <- getAllModules >>= \modules -> pure do
+      (f, _) <- Map.toList modules
+      [ "_build/html" </> f <.> "html" ] <>
+        [ "_build/html/types" </> f <.> "json" | not skipAgda ]
+    need agda
+
   {-
     The final build step. This basically just finds all the files we actually
     need and kicks off the above job to build them.
@@ -201,12 +208,11 @@ rules = do
     getDirectoryFiles "support/web/js" ["**/*.ts", "**/*.tsx"] >>= \files -> need ["support/web/js" </> f | f <- files]
     nodeCommand [] "tsc" ["--noEmit", "-p", "tsconfig.json"]
 
-  phony "recent" do liftIO . print =<< recentAdditions
-
   -- Profit!
 
 main :: IO ()
 main = do
+  setLocaleEncoding utf8
   args <- getArgs
   when ("--help" `elem` args || "-h" `elem` args) do
     putStrLn $ usageInfo "shake" optDescrs

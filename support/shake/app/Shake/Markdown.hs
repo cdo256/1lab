@@ -56,7 +56,6 @@ import Shake.Options
 import Shake.Recent (recentAdditions, renderCommit)
 import Shake.Digest
 import Shake.KaTeX
-import Shake.Git
 
 import HTML.Emit
 
@@ -198,15 +197,14 @@ buildMarkdown :: String   -- ^ The name of the Agda module.
               -> FilePath -- ^ Output HTML file.
               -> Action ()
 buildMarkdown modname input output = do
-  gitCommit <- gitCommit
   skipAgda <- getSkipAgda
 
   need [bibliographyName, input]
 
   modulePath <- findModule modname
-  authors <- gitAuthors modulePath
   let
-    permalink = gitCommit </> modulePath
+    authors = []
+    permalink = "fakeHash" </> modulePath
 
     title
       | length modname > 24 = '…':reverse (take 24 (reverse modname))

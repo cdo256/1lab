@@ -11,7 +11,6 @@ module Shake.Options
   , getSkipAgda
   , getWatching
   , getBaseUrl
-  , getGitOnly
   ) where
 
 import Development.Shake.Classes
@@ -32,8 +31,6 @@ data Options = Options
     -- ^ Launch in watch mode. Prevents some build tasks running.
   , _optBaseUrl   :: String
     -- ^ Base URL for absolute paths
-  , _optGitOnly   :: Bool
-    -- ^ Whether to only build files tracked by git.
   }
   deriving (Eq, Show, Typeable, Generic)
 
@@ -47,7 +44,6 @@ defaultOptions = Options
   , _optSkipAgda  = False
   , _optWatching  = Nothing
   , _optBaseUrl   = ""
-  , _optGitOnly   = False
   }
 
 data GetOptions = GetOptions deriving (Eq, Show, Typeable, Generic)
@@ -64,10 +60,9 @@ setOptions options = do
   _ <- addOracle $ \GetOptions -> pure options
   pure ()
 
-getSkipTypes, getSkipAgda, getWatching, getGitOnly :: Action Bool
+getSkipTypes, getSkipAgda, getWatching :: Action Bool
 getSkipTypes = _optSkipTypes <$> askOracle GetOptions
 getSkipAgda  = _optSkipAgda  <$> askOracle GetOptions
-getGitOnly   = _optGitOnly   <$> askOracle GetOptions
 getWatching  = isJust . _optWatching <$> askOracle GetOptions
 
 getBaseUrl :: Action String
@@ -84,6 +79,4 @@ _1LabOptDescrs =
       "Skip typechecking Agda. Markdown files are read from src/ directly."
   , Option "b" ["base-url"] (ReqArg (\s r -> r { _optBaseUrl = s }) "URL")
       "The base URL to use for absolute links. Should include the protocol."
-  , Option [] ["git-only"] (NoArg (\r -> r { _optGitOnly = True }))
-      "Only build files tracked by git."
   ]
