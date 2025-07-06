@@ -1,14 +1,10 @@
 { self, ... }:
 {
   perSystem =
-    {
-      pkgs,
-      lib,
-      ...
-    }:
+    { pkgs, ... }:
     {
       devShells = {
-        default = lib.mkShell {
+        default = pkgs.mkShell {
           packages = [
             pkgs.agda
             pkgs.emacsPackages.agda2-mode

@@ -16,6 +16,7 @@
       imports = [
         ./support/nix/flake/args.nix
         ./support/nix/flake/packages.nix
+        ./support/nix/flake/shells.nix
       ];
     };
 }
