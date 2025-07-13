@@ -8,6 +8,12 @@
       owner = "nixos";
       repo = "nixpkgs";
     };
+    just-agda = {
+      type = "github";
+      owner = "cdo256";
+      repo = "just-agda";
+      ref = "main";
+    };
   };
 
   outputs =

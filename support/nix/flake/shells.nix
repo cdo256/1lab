@@ -1,7 +1,7 @@
 { self, ... }:
 {
   perSystem =
-    { pkgs, ... }:
+    { self', pkgs, ... }:
     {
       devShells = {
         default = pkgs.mkShell {
@@ -9,6 +9,7 @@
             pkgs.agda
             pkgs.emacsPackages.agda2-mode
             pkgs.agdaPackages._1lab
+            self'.packages.just-agda
           ];
         };
       };
